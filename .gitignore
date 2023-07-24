@@ -1,2 +1,5 @@
 .idea
 assets/data
+.DS_Store
+**/.DS_Store
+.run.sh

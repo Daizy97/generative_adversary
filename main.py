@@ -10,20 +10,21 @@ from adv_utils import *
 from models.vgg16 import vgg_16
 from models.acwgan_gp import ACWGAN_GP
 import argparse
-from scipy.misc import imsave
+# from scipy.misc import imsave
+import cv2 as cv
 
 parser = argparse.ArgumentParser("Generative Adversarial Examples")
 parser.add_argument('--dataset', type=str, default='mnist', help="mnist | svhn | celebA")
 parser.add_argument('--adv', action='store_true', help="using adversarially trained network")
-parser.add_argument('--classifier', type=str, default='resnet', help='resnet | vgg | madry | aditi | zico')
+parser.add_argument('--classifier', type=str, default='madry', help='resnet | vgg | madry | aditi | zico')
 parser.add_argument('--datapath', type=str, default=None, help="input data path")
 parser.add_argument('--seed', type=int, default=1234, help="random seed")
 parser.add_argument('--batch_size', type=int, default=64, help="batch size")
-parser.add_argument('--mode', type=str, default='attack', help='eval | targeted_attack | untargeted_attack')
+parser.add_argument('--mode', type=str, default='targeted_attack', help='eval | targeted_attack | untargeted_attack')
 parser.add_argument('--top5', action='store_true', help="use top5 error")
 
 parser.add_argument('--lr', type=float, default=1, help="learning rate for doing targeted/untargeted attack")
-parser.add_argument('--n_adv_examples', type=int, default=1000000,
+parser.add_argument('--n_adv_examples', type=int, default=100,
                     help="number of adversarial examples batches to search")
 parser.add_argument('--n_iters', type=int, default=1000,
                     help="number of inner iterations for computing adversarial examples")
@@ -38,7 +39,7 @@ parser.add_argument('--source', type=int, default=0, help="ground truth class (s
 parser.add_argument('--target', type=int, default=1, help="target class")
 parser.add_argument('--lambda1', type=float, default=100, help="coefficient for the closeness regularization term")
 parser.add_argument('--lambda2', type=float, default=100, help="coefficient for the repulsive regularization term")
-parser.add_argument('--n2collect', type=int, default=1024, help="number of adversarial examples to collect")
+parser.add_argument('--n2collect', type=int, default=1, help="number of adversarial examples to collect")  # must = n^2
 parser.add_argument('--eps', type=float, default=0.1, help="eps for attack augmented with noise")
 parser.add_argument('--noise', action="store_true", help="add noise augmentation to attacks")
 parser.add_argument('--z_eps', type=float, default=0.1, help="soft constraint for the search region of latent space")
@@ -215,7 +216,8 @@ def evaluate(hps, data_X, data_y, eval_once=True):
         bad_images = np.reshape(bad_images, (len(bad_images) * args.image_size, args.image_size, args.channels))
         bad_images = np.squeeze(bad_images)
 
-        imsave(os.path.join(check_folder('tmp'), 'bad_images.png'), bad_images)
+        # imsave(os.path.join(check_folder('tmp'), 'bad_images.png'), bad_images)
+        cv.imwrite(os.path.join(check_folder('tmp'), 'bad_images.png'), bad_images)
         print("bad_labels:\n{}".format(bad_labels))
 
         if eval_once:

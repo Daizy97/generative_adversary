@@ -220,7 +220,8 @@ def write_labels(labels, dataset, size):
 
 
 def save_images(images, size, image_path):
-    return imsave(inverse_transform(images), size, image_path)
+    # return imsave(inverse_transform(images), size, image_path)
+    return imsave(images, size, image_path)
 
 
 def label_images(images, labels):
@@ -279,7 +280,9 @@ def merge(images, size):
 
 def imsave(images, size, path):
     image = np.squeeze(merge(images, size))
-    return scipy.misc.imsave(path, image)
+    image = (image * 255.).astype(np.uint8)
+    # return scipy.misc.imsave(path, image)
+    return cv.imwrite(path, image)
 
 
 def center_crop(x, crop_h, crop_w, resize_h=64, resize_w=64):
