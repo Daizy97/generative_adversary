@@ -228,7 +228,8 @@ def label_images(images, labels):
     font = cv.FONT_HERSHEY_SIMPLEX
     new_imgs = []
     for i, img in enumerate(images):
-        new_img = ((img.copy() + 1.) * 127.5).astype(np.uint8)
+        # new_img = ((img.copy() + 1.) * 127.5).astype(np.uint8)
+        new_img = (np.ceil((img.copy() + 1.) * 127.5)).astype(np.uint8)
         if new_img.shape[-1] == 3:
             new_img = new_img[..., ::-1]
             new_img = cv.resize(new_img, (100, 100), interpolation=cv.INTER_LINEAR)
